@@ -97,7 +97,7 @@ int main( )
     Shader shader( "Shaders/modelLoading.vs", "Shaders/modelLoading.frag" );
     
     // Load models
-    Model archivero((char*)"Models/Proyecto/archivero.obj");
+    Model telefono((char*)"Models/telefono/telefono.obj");
     glm::mat4 projection = glm::perspective( camera.GetZoom( ), ( float )SCREEN_WIDTH/( float )SCREEN_HEIGHT, 0.1f, 100.0f );
     
   
@@ -128,7 +128,7 @@ int main( )
         glm::mat4 model(1);
         model = glm::rotate(model, glm::radians((float)glfwGetTime()*20),glm::vec3(0.0f,1.0f,0.0f));
         glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-        archivero.Draw(shader);
+        telefono.Draw(shader);
 
         // Swap the buffers
         glfwSwapBuffers( window );

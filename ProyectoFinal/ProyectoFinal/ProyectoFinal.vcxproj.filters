@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="313190731_REPORTE7_GPO12.cpp">
+    <ClCompile Include="313190731_PROYECTO_GPO12.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
