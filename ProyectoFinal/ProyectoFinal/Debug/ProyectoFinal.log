@@ -1,11 +1,24 @@
 ﻿  313190731_PROYECTO_GPO12.cpp
-C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(109,30): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(167,23): warning C4305: '+=': truncamiento de 'double' a 'float'
-C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(171,19): warning C4305: '-=': truncamiento de 'double' a 'float'
-C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(213,17): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(214,17): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(218,21): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(219,21): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(221,13): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(222,13): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(194,24): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(229,21): warning C4244: '=': conversión de 'double' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(230,21): warning C4244: '=': conversión de 'double' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(231,21): warning C4244: '=': conversión de 'double' a 'T'; posible pérdida de datos
+          with
+          [
+              T=float
+          ]
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(477,11): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(478,11): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(482,18): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(483,18): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(485,10): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\ProyectoFinal\313190731_PROYECTO_GPO12.cpp(486,10): warning C4244: '=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
   ProyectoFinal.vcxproj -> C:\Users\I-M-E\Downloads\CGIHC\Lab\proyecto\Repositorio\313190731_ProyectoFinal_Gpo12\ProyectoFinal\Debug\ProyectoFinal.exe
