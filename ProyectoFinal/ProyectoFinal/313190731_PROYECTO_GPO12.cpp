@@ -162,6 +162,7 @@ int main()
 	Model Esfera((char*)"Models/Esfera/Esfera.obj");
 	Model Box((char*)"Models/Box/box.obj");
 	Model silla((char*)"Models/silla/silla.obj");
+	Model muebles((char*)"Models/escritorio/muebles.obj");
 
 
 
@@ -313,7 +314,7 @@ int main()
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
 		//Box.Draw(lightingShader);
 		//Esfera.Draw(lightingShader);
-		silla.Draw(lightingShader);
+		muebles.Draw(lightingShader);
 
 
 
