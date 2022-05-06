@@ -1,4 +1,4 @@
-newmtl sillon:phong1SG
+newmtl phong1SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
@@ -6,15 +6,15 @@ Tf 1.00 1.00 1.00
 map_Kd negro.jpg
 Ni 1.00
 Ks 0.00 0.00 0.00
-map_Ks pielSkinS.png
+map_Ks NegroS.png
 Ns 18.00
-newmtl sillon:phong3SG
+newmtl phong2SG
 illum 4
 Kd 0.00 0.00 0.00
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
-map_Kd grisMetalico.png
+map_Kd barragris.jpg
 Ni 1.00
 Ks 0.00 0.00 0.00
-map_Ks negro.jpg
+map_Ks barragrisS.png
 Ns 18.00
