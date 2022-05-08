@@ -164,12 +164,14 @@ int main()
 	Model silla((char*)"Models/silla/silla.obj");
 	Model sillon((char*)"Models/sillon/sillon.obj");
 	Model telefono((char*)"Models/telefono/telefono.obj");
-
 	Model muebles((char*)"Models/escritorio/muebles.obj");
+	Model impresora((char*)"Models/impresora/impresora.obj");
 	Model Girasol((char*)"Models/girasol/girasol.obj");
 	Model PastoFG((char*)"Models/pastoFG/pastoFG.obj");
 	Model Piso2((char*)"Models/piso2/piso2.obj");
 	Model ArchiveroG((char*)"Models/archiveroG/archiveroG.obj");
+	Model laptop((char*)"Models/laptop/laptop.obj");
+	Model pantalla((char*)"Models/pantalla/pantalla.obj");
 
 
 
@@ -329,14 +331,14 @@ int main()
 		ArchiveroG.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-2.921f, 3.123f, -11.938f));
+		model = glm::translate(model, glm::vec3(-2.921f, 3.105f, -11.938f));
 		model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
 		silla.Draw(lightingShader);
 		
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-3.154f, 3.105f, -10.166f));
+		model = glm::translate(model, glm::vec3(-3.154f, 3.11f, -10.166f));
 		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
@@ -348,6 +350,34 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
 		telefono.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-3.319f, 3.11f, -11.524f));
+		model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		muebles.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-3.378f, 3.567f, -11.258f));
+		model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		impresora.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-3.336f, 3.8f, -11.925f));
+		//model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		laptop.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-3.544f, 4.123f, -11.953f));
+		//model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		pantalla.Draw(lightingShader);
 
 		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		//model = glm::rotate(model, glm::radians((float)glfwGetTime() * 20), glm::vec3(0.0f, 1.0f, 0.0f));
