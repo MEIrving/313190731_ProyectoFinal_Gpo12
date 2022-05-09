@@ -23,11 +23,14 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
+#include "Texture.h"
+#include "modelAnim.h"
 
 // Function prototypes
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow* window, double xPos, double yPos);
 void DoMovement();
+void animacion();
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -39,12 +42,19 @@ GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
 bool firstMouse = true;
+float range = 0.0f;
+float rot = 0.0f;
+
 //spootlight
 glm::vec3 position(0.0f, 2.0f, 1.0f);
 glm::vec3  direction(0.0f, -1.0f, -1.0f);
 
 // Light attributes
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
+//glm::vec3 PosIni(-95.0f, 1.0f, -45.0f);
+glm::vec3 PosIni(0.0f, 0.0f, 0.0f);
+glm::vec3 lightDirection(0.0f, -1.0f, -1.0f);
+
 bool active;
 
 // Positions of the point lights
@@ -55,58 +65,141 @@ glm::vec3 pointLightPositions[] = {
 	glm::vec3(0.0f,0.0f, 0.0f)
 };
 
-float vertices[] = {
-	 -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-	   -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-	   -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-	   -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-	   -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-	   -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-	   -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-	   -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-	   -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-	   -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-	   -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-	   -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-	   -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-	   -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-	   -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-	   -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-	   -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-	   -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-};
+//float vertices[] = {
+//	 -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+//		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+//		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+//		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+//	   -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+//	   -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+//
+//	   -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+//		0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+//		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+//		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+//	   -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+//	   -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+//
+//	   -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+//	   -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+//	   -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+//	   -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+//	   -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+//	   -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+//
+//		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+//		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+//		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+//		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+//		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+//		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+//
+//	   -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+//		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+//		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+//		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+//	   -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+//	   -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+//
+//	   -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+//		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+//		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+//		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+//	   -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+//	   -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+//};
 
 
 
 glm::vec3 Light1 = glm::vec3(0);
 
+//animacion reloj
+float rotKitS = 0.0f;
+float rotKitM = 0.0f;
+float rotKitH = 0.0f;
+
+float  tempS = 0.0f, temp = 0.0f, limiteGrados = 0.0f;
+GLfloat tempM[] = {
+		6.0f,12.0f,18.0f,24.0f,30.0f,36.0f,
+		42.0f,48.0f,54.0f,60.0f,66.0f,72.0f,78.0f,
+		84.0f,90.0f,96.0f,102.0f,108.0f,114.0f,120.0f,
+		126.0f,132.0f,138.0f,144.0f,150.0f,156.0f,162.0f,
+		168.0f,174.0f,180.0f,186.0f,192.0f,198.0f,204.0,
+		210.0f,216.0f,222.0f,228.0f,234.0f,240.0f,246.0f,
+		252.0f,258.0f,264.0f,270.0f,276.0f,282.0f,288.0f,
+		294.0f,300.0f,306.0f,312.0f,318.0f,324.0f,330.0f,
+		336.0f,342.0f,348.0f,354.0f,360.0f,
+};
+//float segundo = 60.0f, minuto = 60.0f, hora = 12.0f;
+bool banderaS = 0.0f, banderaM = 0.0f, banderaH = 0.0f;
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
+
+// Keyframes
+float posX = PosIni.x, posY = PosIni.y, posZ = PosIni.z, rotRodIzq = 0;
+
+#define MAX_FRAMES 9
+int i_max_steps = 190;
+int i_curr_steps = 0;
+typedef struct _frame
+{
+	//Variables para GUARDAR Key Frames
+	float posX;		//Variable para PosicionX
+	float posY;		//Variable para PosicionY
+	float posZ;		//Variable para PosicionZ
+	float incX;		//Variable para IncrementoX
+	float incY;		//Variable para IncrementoY
+	float incZ;		//Variable para IncrementoZ
+	float rotRodIzq;
+	float rotInc;
+
+}FRAME;
+
+FRAME KeyFrame[MAX_FRAMES];
+int FrameIndex = 0;			//introducir datos
+bool play = false;
+int playIndex = 0;
+
+
+void saveFrame(void)
+{
+
+	printf("frameindex %d\n", FrameIndex);
+
+	KeyFrame[FrameIndex].posX = posX;
+	KeyFrame[FrameIndex].posY = posY;
+	KeyFrame[FrameIndex].posZ = posZ;
+
+	KeyFrame[FrameIndex].rotRodIzq = rotRodIzq;
+
+
+	FrameIndex++;
+}
+
+void resetElements(void)
+{
+	posX = KeyFrame[0].posX;
+	posY = KeyFrame[0].posY;
+	posZ = KeyFrame[0].posZ;
+
+	rotRodIzq = KeyFrame[0].rotRodIzq;
+
+}
+
+void interpolation(void)
+{
+
+	KeyFrame[playIndex].incX = (KeyFrame[playIndex + 1].posX - KeyFrame[playIndex].posX) / i_max_steps;
+	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].posY - KeyFrame[playIndex].posY) / i_max_steps;
+	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;
+
+	KeyFrame[playIndex].rotInc = (KeyFrame[playIndex + 1].rotRodIzq - KeyFrame[playIndex].rotRodIzq) / i_max_steps;
+
+}
+
+
 
 int main()
 {
@@ -137,6 +230,7 @@ int main()
 	// Set the required callback functions
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, MouseCallback);
+	printf("%f\n", glfwGetTime());
 
 	// GLFW Options
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -153,10 +247,16 @@ int main()
 	// Define the viewport dimensions
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
+	// OpenGL options
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 	Shader lightingShader("Shaders/lighting.vs", "Shaders/lighting.frag");
 	Shader lampShader("Shaders/lamp.vs", "Shaders/lamp.frag");
+	Shader SkyBoxshader("Shaders/SkyBox.vs", "Shaders/SkyBox.frag");
+	Shader animShader("Shaders/anim.vs", "Shaders/anim.frag");
 
 	Model Piso((char*)"Models/pisoC/pisoC.obj");
 	Model Esfera((char*)"Models/Esfera/Esfera.obj");
@@ -172,27 +272,212 @@ int main()
 	Model ArchiveroG((char*)"Models/archiveroG/archiveroG.obj");
 	Model laptop((char*)"Models/laptop/laptop.obj");
 	Model pantalla((char*)"Models/pantalla/pantalla.obj");
+	Model segundero((char*)"Models/relojA/segundero.obj");
+	Model minutero((char*)"Models/relojA/minutero.obj");
+	Model hora((char*)"Models/relojA/hora.obj");
+	Model relojA((char*)"Models/relojA/relojA.obj");
 
+	// Build and compile our shader program
 
+	//Modelo de animación
+	//ModelAnim animacionPersonaje("Animaciones/Personaje2/MacarenaDance.dae");
+	
+
+	//animacionPersonaje.initShaders(animShader.Program);
+	
+	//Inicialización de KeyFrames
+
+	for (int i = 0; i < MAX_FRAMES; i++)
+	{
+		KeyFrame[i].posX = 0;
+		KeyFrame[i].incX = 0;
+		KeyFrame[i].incY = 0;
+		KeyFrame[i].incZ = 0;
+		KeyFrame[i].rotRodIzq = 0;
+		KeyFrame[i].rotInc = 0;
+	}
+
+	// Set up vertex data (and buffer(s)) and attribute pointers
+	GLfloat vertices[] =
+	{
+		// Positions            // Normals              // Texture Coords
+		-0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,     0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,     1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,     1.0f,  1.0f,
+		0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,     1.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,    0.0f,  0.0f, -1.0f,     0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,     0.0f,  0.0f,
+
+		-0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,     0.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,     0.0f,  0.0f,  1.0f,     1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,     1.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,  	1.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,     0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,     0.0f,  0.0f,
+
+		-0.5f,  0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,    1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,    1.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,    0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,    0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,    0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,    1.0f,  0.0f,
+
+		0.5f,  0.5f,  0.5f,     1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,     1.0f,  0.0f,  0.0f,     1.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,     1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,     1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
+		0.5f, -0.5f,  0.5f,     1.0f,  0.0f,  0.0f,     0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,     1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
+
+		-0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,     0.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,     0.0f, -1.0f,  0.0f,     1.0f,  1.0f,
+		0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,     1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,     1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,    0.0f, -1.0f,  0.0f,     0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,     0.0f,  1.0f,
+
+		-0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,     0.0f,  1.0f,
+		0.5f,  0.5f, -0.5f,     0.0f,  1.0f,  0.0f,     1.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,     1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,     1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,    0.0f,  1.0f,  0.0f,     0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,     0.0f,  1.0f
+	};
+
+	GLfloat skyboxVertices[] = {
+		// Positions
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f
+	};
+	GLuint indices[] =
+	{  // Note that we start from 0!
+		0,1,2,3,
+		4,5,6,7,
+		8,9,10,11,
+		12,13,14,15,
+		16,17,18,19,
+		20,21,22,23,
+		24,25,26,27,
+		28,29,30,31,
+		32,33,34,35
+	};
+
+	// Positions all containers
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
 
 	// First, set the container's VAO (and VBO)
-	GLuint VBO, VAO;
+	GLuint VBO, VAO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	
 	// Position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
-	// normal attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	// Normals attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
 
 	// Set texture units
 	lightingShader.Use();
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
 	glUniform1i(glGetUniformLocation(lightingShader.Program, "material.specular"), 1);
+
+	// Texture Coordinate attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
+	glBindVertexArray(0);
+
+	// Then, we set the light's VAO (VBO stays the same. After all, the vertices are the same for the light object (also a 3D cube))
+	GLuint lightVAO;
+	glGenVertexArrays(1, &lightVAO);
+	glBindVertexArray(lightVAO);
+	// We only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need.
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	// Set the vertex attributes (only position data for the lamp))
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0); // Note that we skip over the other data in our buffer object (we don't need the normals/textures, only positions).
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+
+
+	//SkyBox
+	GLuint skyboxVBO, skyboxVAO;
+	glGenVertexArrays(1, &skyboxVAO);
+	glGenBuffers(1, &skyboxVBO);
+	glBindVertexArray(skyboxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+
+	// Load textures
+	vector<const GLchar*> faces;
+	faces.push_back("SkyBox/right.tga");
+	faces.push_back("SkyBox/left.tga");
+	faces.push_back("SkyBox/top.tga");
+	faces.push_back("SkyBox/bottom.tga");
+	faces.push_back("SkyBox/back.tga");
+	faces.push_back("SkyBox/front.tga");
+
+	GLuint cubemapTexture = TextureLoading::LoadCubemap(faces);
+
 
 	glm::mat4 projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 100.0f);
 
@@ -208,12 +493,13 @@ int main()
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		DoMovement();
+		animacion();
 
 		// Clear the colorbuffer
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// OpenGL options
+		// OpenGL options    revisar si quitar o no!!!!
 		glEnable(GL_DEPTH_TEST);
 
 
@@ -225,6 +511,8 @@ int main()
 		lightingShader.Use();
 		GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
 		glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+		// Set material properties
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
 
 
 		// Directional light
@@ -306,6 +594,16 @@ int main()
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
+		// Bind diffuse map
+		//glBindTexture(GL_TEXTURE_2D, texture1);*/
+
+		// Bind specular map
+		/*glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);*/
+
+		glBindVertexArray(VAO);
+		glm::mat4 tmp = glm::mat4(1.0f); //Temp
+
 
 		glm::mat4 model(1);
 
@@ -379,6 +677,42 @@ int main()
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
 		pantalla.Draw(lightingShader);
 
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-3.579f, 5.176f, -12.065f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotKitS), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::rotate(model, glm::radians((float)glfwGetTime()*50), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		segundero.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-3.579f, 5.176f, -12.065f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotKitM), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::rotate(model, glm::radians((float)glfwGetTime() * 20), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		minutero.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-3.579f, 5.176f, -12.065f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotKitH), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::rotate(model, glm::radians((float)glfwGetTime() * 5), glm::vec3(0.0f, 0.0f, 1.0f));
+		
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		hora.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-3.579f, 5.176f, -12.065f));
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(rotKitS), glm::vec3(0.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		relojA.Draw(lightingShader);
+
 		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		//model = glm::rotate(model, glm::radians((float)glfwGetTime() * 20), glm::vec3(0.0f, 1.0f, 0.0f));
 		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -404,6 +738,46 @@ int main()
 		glDisable(GL_BLEND);  //Desactiva el canal alfa 
 		glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0f, 1.0f, 1.0f, 1.0f);
 		glBindVertexArray(0);
+
+
+		/*_______________________________Personaje Animado___________________________*/
+		animShader.Use();
+		modelLoc = glGetUniformLocation(animShader.Program, "model");
+		viewLoc = glGetUniformLocation(animShader.Program, "view");
+		projLoc = glGetUniformLocation(animShader.Program, "projection");
+
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+		glUniform3f(glGetUniformLocation(animShader.Program, "material.specular"), 0.5f, 0.5f, 0.5f);
+		glUniform1f(glGetUniformLocation(animShader.Program, "material.shininess"), 32.0f);
+		glUniform3f(glGetUniformLocation(animShader.Program, "light.ambient"), 1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(animShader.Program, "light.diffuse"), 1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(animShader.Program, "light.specular"), 0.5f, 0.5f, 0.5f);
+		glUniform3f(glGetUniformLocation(animShader.Program, "light.direction"), 0.0f, -1.0f, -1.0f);
+		view = camera.GetViewMatrix();
+
+		//model = glm::mat4(1);
+		//model = glm::translate(model, glm::vec3(PosIni.x + 0.0f, PosIni.y + 0.0f, PosIni.z));
+		//model = glm::scale(model, glm::vec3(0.004f));	// it's a bit too big for our scene, so scale it down
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//animacionPersonaje.Draw(animShader);
+		
+		//animacion de reloj segundero
+		/*model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-3.579f, 5.176f, -12.065f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));*/
+
+		//model = glm::translate(model, glm::vec3(PosIni.x + 0.0f, PosIni.y + 0.0f, PosIni.z));
+		//model = glm::scale(model, glm::vec3(0.004f));	// it's a bit too big for our scene, so scale it down
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//reloj.Draw(animShader);
+		
+		glBindVertexArray(0);
+
+
+
+
 
 
 		// Also draw the lamp object, again binding the appropriate shader
@@ -437,12 +811,33 @@ int main()
 		}
 		glBindVertexArray(0);
 
+		// Draw skybox as last
+		glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
+		SkyBoxshader.Use();
+		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));	// Remove any translation component of the view matrix
+		glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(SkyBoxshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+		// skybox cube
+		glBindVertexArray(skyboxVAO);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+		glDepthFunc(GL_LESS); // Set depth function back to default
 
 
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
 	}
 
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteVertexArrays(1, &lightVAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, &skyboxVAO);
+	glDeleteBuffers(1, &skyboxVBO);
 
 	// Terminate GLFW, clearing any resources allocated by GLFW.
 	glfwTerminate();
@@ -451,6 +846,110 @@ int main()
 
 	return 0;
 }
+
+
+void animacion()
+{
+		if (limiteGrados < 360.0f)
+		{
+			//printf("limiteGrados: %f\n", limiteGrados);
+			//printf("-------------------temp:  %f\n", temp);
+			//printf("-----------------------------------tempS:  %f\n", tempS);
+
+			limiteGrados ++;
+			
+			
+			//if (temp == 6.0f*10 )//aproximadamente lo que hace sincronizarce con un reloj digital, se realizó pruebas en laptop
+			if (temp == 6.0f)
+			{
+				banderaS=true;
+				temp = 0.0f;
+				//printf(banderaS ? "-------------------------------------true" : "-------------------------------false");
+				//printf("-------------------------------------------banderaS:  %b\n", banderaS);
+
+			}
+			
+			temp++;
+			//tempS++;
+			if (banderaS)
+			{
+				rotKitS += 6.0f;
+				if (rotKitS == 360.0f)
+				{
+					rotKitS = 0.0f;
+					
+					banderaM = true;
+				}
+				banderaS = false;
+			}
+			if (banderaM)
+			{
+				rotKitM += 6.0f;
+				if (rotKitM == 360.0f)
+				{
+					rotKitM = 0.0f;
+
+					banderaH = true;
+				}
+				banderaM = false;
+			}
+
+			if (banderaH)
+			{
+				rotKitH += 30.0f;
+				if (rotKitH == 360.0f)
+				{
+					rotKitH = 0.0f;
+
+					banderaS = true;
+				}
+				banderaM = false;
+			}
+
+			
+		}
+		else
+		{
+			limiteGrados = 0.0f;
+		}
+		
+
+	
+	//Movimiento del personaje
+	
+	if (play)
+	{
+		if (i_curr_steps >= i_max_steps) //end of animation between frames?
+		{
+			playIndex++;
+			if (playIndex > FrameIndex - 2)	//end of total animation?
+			{
+				printf("termina anim\n");
+				playIndex = 0;
+				play = false;
+			}
+			else //Next frame interpolations
+			{
+				i_curr_steps = 0; //Reset counter
+								  //Interpolation
+				interpolation();
+			}
+		}
+		else
+		{
+			//Draw animation
+			posX += KeyFrame[playIndex].incX;
+			posY += KeyFrame[playIndex].incY;
+			posZ += KeyFrame[playIndex].incZ;
+
+			rotRodIzq += KeyFrame[playIndex].rotInc;
+
+			i_curr_steps++;
+		}
+
+	}
+}
+
 
 // Moves/alters the camera positions based on user input
 void DoMovement()
