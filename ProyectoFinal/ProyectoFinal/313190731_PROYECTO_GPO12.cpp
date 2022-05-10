@@ -37,7 +37,7 @@ const GLuint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Camera
-Camera  camera(glm::vec3(0.0f, 1.0f, 3.0f));
+Camera  camera(glm::vec3(0.0f, 5.0f, -2.5f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
@@ -213,7 +213,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Iluminacion 2", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "313190731_PROYECTO_FINAL_GPO12", nullptr, nullptr);
 
 	if (nullptr == window)
 	{
@@ -479,7 +479,7 @@ int main()
 	GLuint cubemapTexture = TextureLoading::LoadCubemap(faces);
 
 
-	glm::mat4 projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(camera.GetZoom(), (GLfloat)SCREEN_WIDTH / (GLfloat)SCREEN_HEIGHT, 0.1f, 50.0f);
 
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -1010,6 +1010,10 @@ void DoMovement()
 		pointLightPositions[0].z += 0.01f;
 	}
 
+	if (keys[GLFW_KEY_LEFT_ALT])
+	{
+
+	}
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -1035,13 +1039,31 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 	if (keys[GLFW_KEY_SPACE])
 	{
 		active = !active;
+
 		if (active)
 		{
 			Light1 = glm::vec3(1.0f, 1.0f, 1.0f);
+			
 		}
 		else
 		{
+
 			Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
+		}
+	}
+	if (keys[GLFW_KEY_LEFT_ALT])
+	{
+		active = !active;
+
+		if (active)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+
+		}
+		else
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
 	}
 }
