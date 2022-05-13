@@ -37,7 +37,7 @@ const GLuint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Camera
-Camera  camera(glm::vec3(0.0f, 5.0f, -2.5f));
+Camera  camera(glm::vec3(0.0f, 5.0f, 5.0f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
@@ -324,10 +324,10 @@ int main()
 	// Build and compile our shader program
 
 	//Modelo de animación
-	//ModelAnim animacionPersonaje("Animaciones/Personaje2/MacarenaDance.dae");
+	ModelAnim animacionPersonaje("Animaciones/Personaje3/circle.dae");
 	
 
-	//animacionPersonaje.initShaders(animShader.Program);
+	animacionPersonaje.initShaders(animShader.Program);
 	
 	//Inicialización de KeyFrames
 
@@ -1206,11 +1206,11 @@ int main()
 		glUniform3f(glGetUniformLocation(animShader.Program, "light.direction"), 0.0f, -1.0f, -1.0f);
 		view = camera.GetViewMatrix();
 
-		//model = glm::mat4(1);
-		//model = glm::translate(model, glm::vec3(PosIni.x + 0.0f, PosIni.y + 0.0f, PosIni.z));
-		//model = glm::scale(model, glm::vec3(0.004f));	// it's a bit too big for our scene, so scale it down
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//animacionPersonaje.Draw(animShader);
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.2, 3.1f, -5.0f));
+		model = glm::scale(model, glm::vec3(0.008f));	// it's a bit too big for our scene, so scale it down
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		animacionPersonaje.Draw(animShader);
 		
 		//animacion de reloj segundero
 		/*model = glm::mat4(1);
@@ -1304,10 +1304,7 @@ void animacion()
 			//printf("limiteGrados: %f\n", limiteGrados);
 			//printf("-------------------temp:  %f\n", temp);
 			//printf("-----------------------------------tempS:  %f\n", tempS);
-
 			limiteGrados ++;
-			
-			
 			//if (temp == 6.0f*10 )//aproximadamente lo que hace sincronizarce con un reloj digital, se realizó pruebas en laptop
 			if (temp == 6.0f)
 			{
@@ -1315,9 +1312,7 @@ void animacion()
 				temp = 0.0f;
 				//printf(banderaS ? "-------------------------------------true" : "-------------------------------false");
 				//printf("-------------------------------------------banderaS:  %b\n", banderaS);
-
 			}
-			
 			temp++;
 			//tempS++;
 			if (banderaS)
